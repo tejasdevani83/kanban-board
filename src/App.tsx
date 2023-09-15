@@ -1,24 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from './store';
+import { moveTask } from './store/taskSlice';
+import Column from './components/Column';
 
 function App() {
+  const columns = useSelector((state: RootState) => state.tasks);
+  const dispatch = useDispatch();
+
+  const onDragEnd = (result: any) => {
+    const { source, destination, draggableId } = result;
+
+    if (!destination) return;
+
+    if (source.droppableId === destination.droppableId && source.index === destination.index) return;
+
+    dispatch(moveTask({ source, destination, taskId: draggableId }));
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Kanban Board</h1>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="board" direction="horizontal" type="column">
+          {(provided) => (
+            <div className="board" ref={provided.innerRef} {...provided.droppableProps}>
+              {Object.keys(columns).map((columnId, index) => (
+                <Column key={columnId} columnId={columnId} column={columns[columnId]} index={index} />
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 }
