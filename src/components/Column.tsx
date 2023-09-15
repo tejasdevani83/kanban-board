@@ -17,7 +17,7 @@ interface ColumnProps {
 const Column: React.FC<ColumnProps> = ({ columnId, column, index }) => {
     return (
         <Paper elevation={3} style={{ padding: '8px', margin: '8px', minWidth: '250px' }}>
-            <Typography variant="h6">{columnId}</Typography>
+            <Typography variant="h6">{column.title}</Typography>
             <Droppable droppableId={columnId} type="task">
                 {(provided) => (
                     <List {...provided.droppableProps} ref={provided.innerRef}>

@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { DraggableLocation } from 'react-beautiful-dnd';
 
 interface Task {
     id: string;
@@ -21,11 +22,11 @@ const initialState: TaskState = {
     },
     inProgress: {
         title: 'In Progress',
-        tasks: [],
+        tasks: [{ id: 'task-3', content: 'Task 3' }],
     },
     done: {
         title: 'Done',
-        tasks: [],
+        tasks: [{ id: 'task-4', content: 'Task 4' }],
     },
 };
 
@@ -38,13 +39,19 @@ const taskSlice = createSlice({
         },
         moveTask: (
             state,
-            action: PayloadAction<{ source: string; destination: string; taskId: string }>
+            action: PayloadAction<{ source: DraggableLocation; destination: DraggableLocation; taskId: string }>
         ) => {
             const { source, destination, taskId } = action.payload;
-            const task = state[source].tasks.find((t) => t.id === taskId);
+            const task = state[source.droppableId].tasks.find((t) => t.id === taskId);
+            console.log(Boolean(task))
             if (task) {
-                state[source].tasks = state[source].tasks.filter((t) => t.id !== taskId);
-                state[destination].tasks.push(task);
+                state[source.droppableId].tasks.splice(source.index, 1)
+                const destinationId = destination?.droppableId as string;
+                const destinationDropIndex = destination?.index;
+                if (destinationId && destinationDropIndex !== undefined) {
+                    // state[destinationId].tasks.push(task);
+                    state[destinationId].tasks.splice(destinationDropIndex, 0, task)
+                }
             }
         },
     },
