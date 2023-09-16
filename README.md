@@ -11,6 +11,8 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
+To see demo: Click [kanban-material-board.vercel.app](kanban-material-board.vercel.app).\
+This project is hosted by Vercel.
 ## Libraries Used
 
 - React
