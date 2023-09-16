@@ -18,15 +18,19 @@ interface TaskState {
 const initialState: TaskState = {
     todo: {
         title: 'To Do',
-        tasks: [{ id: 'task-1', content: 'Task 1' }, { id: 'task-2', content: 'Task 2' }],
+        tasks: [
+            { id: 'task-3', content: 'Create redux store to store tasks hard coded!' },
+            { id: 'task-4', content: 'Implement Kanban Board.' },
+            { id: 'task-5', content: 'Upload it to the GitHub.' }
+        ],
     },
     inProgress: {
         title: 'In Progress',
-        tasks: [{ id: 'task-3', content: 'Task 3' }],
+        tasks: [{ id: 'task-2', content: 'Create React App with TypeScript.' }],
     },
     done: {
         title: 'Done',
-        tasks: [{ id: 'task-4', content: 'Task 4' }],
+        tasks: [{ id: 'task-1', content: 'Find the library which handles drag & drop beautyfully!' }],
     },
 };
 
@@ -43,13 +47,12 @@ const taskSlice = createSlice({
         ) => {
             const { source, destination, taskId } = action.payload;
             const task = state[source.droppableId].tasks.find((t) => t.id === taskId);
-            console.log(Boolean(task))
+
             if (task) {
                 state[source.droppableId].tasks.splice(source.index, 1)
                 const destinationId = destination?.droppableId as string;
                 const destinationDropIndex = destination?.index;
                 if (destinationId && destinationDropIndex !== undefined) {
-                    // state[destinationId].tasks.push(task);
                     state[destinationId].tasks.splice(destinationDropIndex, 0, task)
                 }
             }

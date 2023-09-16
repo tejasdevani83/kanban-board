@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from './store';
 import { moveTask } from './store/taskSlice';
 import Column from './components/Column';
-import { Grid } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 
 function App() {
   const columns = useSelector((state: RootState) => state.tasks);
@@ -12,32 +12,32 @@ function App() {
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
-    console.log(result)
     if (!destination) return;
-    console.log('1')
     if (source.droppableId === destination.droppableId && source.index === destination.index) return;
-    console.log('2')
+
     dispatch(moveTask({ source, destination, taskId: draggableId }));
   };
   return (
     <div className="App">
-      <h1>Kanban Board</h1>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="board" direction="horizontal" type="column">
-          {(provided) => (
-            <div className="board" ref={provided.innerRef} {...provided.droppableProps}>
-              <Grid container spacing={2}>
-                {Object.keys(columns).map((columnId, index) => (
-                  <Grid key={columnId} item xs={12} md={4}>
-                    <Column key={columnId} columnId={columnId} column={columns[columnId]} index={index} />
-                  </Grid>
-                ))}
-                {provided.placeholder}
-              </Grid>
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <Container maxWidth='md'>
+        <h1>Kanban Board</h1>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="board" direction="horizontal" type="column">
+            {(provided) => (
+              <div className="board" ref={provided.innerRef} {...provided.droppableProps}>
+                <Grid container spacing={2}>
+                  {Object.keys(columns).map((columnId, index) => (
+                    <Grid key={columnId} item xs={12} md={4}>
+                      <Column key={columnId} columnId={columnId} column={columns[columnId]} index={index} />
+                    </Grid>
+                  ))}
+                  {provided.placeholder}
+                </Grid>
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </Container>
     </div>
   );
 }
